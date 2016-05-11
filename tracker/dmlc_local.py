@@ -48,7 +48,7 @@ class LocalLauncher(object):
                 bash = keepalive % (cmd)
                 ret = subprocess.call(bash, shell=True, executable='bash', env = env)
             if ret == 0:
-                logging.debug('Thread %d exit with 0')
+                logging.debug('Thread exited with 0')
                 return
             else:
                 if os.name == 'nt':
@@ -71,10 +71,15 @@ class LocalLauncher(object):
 
     def run(self):
         tracker.config_logger(self.args)
+        env = {
+            'fun_submit' : self.submit(),
+            'pscmd' : self.cmd,
+        }
+        if self.args.localhost:
+            env['hostIP'] = '127.0.0.1'
         tracker.submit(self.args.num_workers,
                        self.args.num_servers,
-                       fun_submit = self.submit(),
-                       pscmd = self.cmd)
+                       **env)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -84,6 +89,8 @@ def main():
                         help = 'number of worker nodes to be launched')
     parser.add_argument('-s', '--num-servers', type=int,
                         help = 'number of server nodes to be launched')
+    parser.add_argument('--localhost', action='store_true',
+                        help = 'Use localhost (127.0.0.1) instead of an ip.')
     parser.add_argument('--log-level', default='INFO', type=str,
                         choices=['INFO', 'DEBUG'],
                         help = 'logging level')

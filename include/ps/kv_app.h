@@ -107,7 +107,7 @@ class KVWorker : public SimpleApp {
    * @param cb the callback which is called when the push is finished.
    * @return the timestamp of this request
    */
-  int Push(const std::vector<Key>& keys,
+  virtual int Push(const std::vector<Key>& keys,
            const std::vector<Val>& vals,
            const std::vector<int>& lens = {},
            int cmd = 0,
@@ -142,7 +142,7 @@ class KVWorker : public SimpleApp {
    * @param cb the callback which is called when the pull is finished.
    * @return the timestamp of this request
    */
-  int Pull(const std::vector<Key>& keys,
+  virtual int Pull(const std::vector<Key>& keys,
            std::vector<Val>* vals,
            std::vector<int>* lens = nullptr,
            int cmd = 0,
@@ -162,7 +162,7 @@ class KVWorker : public SimpleApp {
    *
    * \param timestamp the timestamp returned by the push or pull
    */
-  void Wait(int timestamp) { obj_->WaitRequest(timestamp); }
+  virtual void Wait(int timestamp) { obj_->WaitRequest(timestamp); }
 
   /**
    * \brief zero-copy Push
@@ -172,7 +172,7 @@ class KVWorker : public SimpleApp {
    * responsibility to keep the content to be not changed before actually
    * finished.
    */
-  int ZPush(const SArray<Key>& keys,
+  virtual int ZPush(const SArray<Key>& keys,
             const SArray<Val>& vals,
             const SArray<int>& lens = {},
             int cmd = 0,
@@ -195,7 +195,7 @@ class KVWorker : public SimpleApp {
    * responsibility to keep the content to be not changed before actually
    * finished.
    */
-  int ZPull(const SArray<Key>& keys,
+  virtual int ZPull(const SArray<Key>& keys,
             SArray<Val>* vals,
             SArray<int>* lens = nullptr,
             int cmd = 0,
@@ -217,7 +217,7 @@ class KVWorker : public SimpleApp {
   /**
    * \brief set a user-defined slicer
    */
-  void set_slicer(const Slicer& slicer) {
+  virtual void set_slicer(const Slicer& slicer) {
     CHECK(slicer); slicer_ = slicer;
   }
 
