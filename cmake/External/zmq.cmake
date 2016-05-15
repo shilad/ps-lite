@@ -44,7 +44,7 @@ if (NOT __ZMQ_INCLUDED) # guard against multiple includes
       )
 
     set(ZMQ_FOUND TRUE)
-    set(ZMQ_INCLUDE_DIRS ${ZMQ_INSTALL}/include PARENT_SCOPE)
+    set(ZMQ_INCLUDE_DIRS ${ZMQ_INSTALL}/include)
 	
 	if(MSVC)
 		FILE(GLOB_RECURSE ZMQ_LIBRARIES "${ZMQ_INSTALL}/lib/libzmq-${CMAKE_VS_PLATFORM_TOOLSET}*.lib")
@@ -53,7 +53,7 @@ if (NOT __ZMQ_INCLUDED) # guard against multiple includes
 		FILE(GLOB_RECURSE ZMQ_LIBRARIES "${ZMQ_INSTALL}/lib/libzmq-*.a")
 		#set(ZMQ_LIBRARIES ${ZMQ_INSTALL}/lib/libZMQ.a ${CMAKE_THREAD_LIBS_INIT})
 	endif()
-    set(ZMQ_LIBRARY_DIRS ${ZMQ_INSTALL}/lib PARENT_SCOPE)
+    set(ZMQ_LIBRARY_DIRS ${ZMQ_INSTALL}/lib)
     set(ZMQ_EXTERNAL TRUE)
 
     list(APPEND external_project_dependencies ZMQ)
