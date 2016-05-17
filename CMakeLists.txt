@@ -30,7 +30,32 @@ include_directories(pslite "${PROJECT_BINARY_DIR}/src/")
 list(APPEND pslite_INCLUDE_DIR_L "${PROJECT_BINARY_DIR}/include/")
 
 #FILE(COPY DIRECTORY "${PROJECT_BINARY_DIR}/include" DESTINATION "${PROJECT_SOURCE_DIR}/" FILES_MATCHING PATTERN "*.pb.h")
-FILE(GLOB SOURCE "src/*.cc")
+set(SOURCE
+        include/ps/internal/assign_op.h
+        include/ps/internal/customer.h
+        include/ps/internal/env.h
+        include/ps/internal/message.h
+        include/ps/internal/parallel_kv_match.h
+        include/ps/internal/parallel_sort.h
+        include/ps/internal/postoffice.h
+        include/ps/internal/threadsafe_queue.h
+        include/ps/internal/utils.h
+        include/ps/internal/van.h
+
+        include/ps/base.h
+        include/ps/kv_app.h
+        include/ps/ps.h
+        include/ps/range.h
+        include/ps/sarray.h
+        include/ps/simple_app.h
+
+        src/customer.cc
+        src/network_utils.h
+        src/postoffice.cc
+        src/resender.h
+        src/van.cc
+        src/zmq_van.h
+        )
 
 if(MSVC)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
@@ -49,7 +74,8 @@ list(APPEND pslite_LINKER_LIBS_L "ipHlpApi.lib" "ws2_32.lib")
 endif()
 
 list(APPEND SOURCE ${proto_srcs}) 
-add_library(pslite ${SOURCE}) 
+add_library(pslite ${SOURCE})
+add_dependencies(pslite ZMQ)
 
 target_link_libraries(pslite ${pslite_LINKER_LIBS})
 list(APPEND pslite_LINKER_LIBS_L ${PROTOBUF_LIBRARIES})
