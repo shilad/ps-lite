@@ -37,7 +37,7 @@ class ZMQVan : public Van {
     // start zmq
     context_ = zmq_ctx_new();
     CHECK(context_ != NULL) << "create 0mq context failed";
-    zmq_ctx_set(context_, ZMQ_MAX_SOCKETS, 65536);
+    CHECK_EQ(0, zmq_ctx_set(context_, ZMQ_MAX_SOCKETS, 65536));
     // zmq_ctx_set(context_, ZMQ_IO_THREADS, 4);
     Van::Start();
   }
@@ -131,7 +131,7 @@ class ZMQVan : public Van {
     int n = msg.data.size();
     if (n == 0) tag = 0;
     zmq_msg_t meta_msg;
-    zmq_msg_init_data(&meta_msg, meta_buf, meta_size, FreeData, NULL);
+    CHECK_EQ(0, zmq_msg_init_data(&meta_msg, meta_buf, meta_size, FreeData, NULL));
     while (true) {
       if (zmq_msg_send(&meta_msg, socket, tag) == meta_size) break;
       if (errno == EINTR) continue;
@@ -147,7 +147,7 @@ class ZMQVan : public Van {
       zmq_msg_t data_msg;
       SArray<char>* data = new SArray<char>(msg.data[i]);
       int data_size = data->size();
-      zmq_msg_init_data(&data_msg, data->data(), data->size(), FreeData, data);
+      CHECK_EQ(0, zmq_msg_init_data(&data_msg, data->data(), data->size(), FreeData, data));
       if (i == n - 1) tag = 0;
       while (true) {
         if (zmq_msg_send(&data_msg, socket, tag) == data_size) break;
